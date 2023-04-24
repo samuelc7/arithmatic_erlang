@@ -1,12 +1,51 @@
 -module(arithmatic).
--export([start_factorializer/0,start_adder/0,start_subtracter/0,start_multiplier/0,start_divider/0,
-		 factorializer/0,adder/0,subtracter/0,multiplier/0,divider/0,
-		 factorial_of/2,add/3,subtract/3]).
+-export([start_factorializer/0,start_subtracter/0,start_multiplier/0,start_divider/0,
+		 factorializer/0, add/3, subtracter/0,multiplier/0,divider/0,
+		 factorial_of/2,subtract/3]).
 
 %%
 %% Put your functions, described in the task HTML file here.
 %%
+start_factorializer() -> 0.
 
+start_adder() -> 0.
+
+start_subtracter() -> 0.
+
+start_multiplier() -> 0.
+
+start_divider() -> 0.
+
+factorializer() -> 0.
+
+subtracter() -> 0.
+
+multiplier() -> 0.
+
+divider() -> 0.
+
+factorial_of(PID, 0) -> 1;
+factorial_of(PID, X) -> X * factorial_of(PID, X - 1).
+
+add(Pid, X, Y) -> 
+	if not is_number(X)->
+		{fail, X, is_not_number};
+	not is_number(Y) ->
+		{fail, Y, is_not_number};
+	true -> X + Y
+	end.
+		
+subtract(Pid, X, Y) ->
+	if not is_number(X)->
+		{fail, X, is_not_number};
+	not is_number(Y) ->
+		{fail, Y, is_not_number};
+	true -> X - Y
+	end.
+
+multiply(Pid, X, Y) -> X * Y.
+
+divide(Pid, X, Y) -> X / Y.
 
 -ifdef(EUNIT).
 %%
