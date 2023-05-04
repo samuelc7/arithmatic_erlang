@@ -1,7 +1,7 @@
 -module(arithmatic).
 -export([start_factorializer/0,start_subtracter/0,start_multiplier/0,start_divider/0,
-		 factorializer/0, add/3, subtracter/0,multiplier/0,divider/0,
-		 factorial_of/2,subtract/3]).
+		 factorializer/0, add/3, subtracter/0,multiplier/0,divide/3,
+		 factorial_of/2,subtract/3, divider/0, add/0]).
 
 %%
 %% Put your functions, described in the task HTML file here.
@@ -24,8 +24,12 @@ multiplier() -> 0.
 
 divider() -> 0.
 
+add() -> 0.
+
 factorial_of(PID, 0) -> 1;
-factorial_of(PID, X) -> X * factorial_of(PID, X - 1).
+factorial_of(PID, X) when X < 0 -> {fail, X, is_negative};
+factorial_of(PID, X) when is_integer(X) -> X * factorial_of(PID, X - 1);
+factorial_of(PID, X) -> {fail, X, is_not_integer}.
 
 add(Pid, X, Y) -> 
 	if not is_number(X)->
@@ -43,9 +47,24 @@ subtract(Pid, X, Y) ->
 	true -> X - Y
 	end.
 
-multiply(Pid, X, Y) -> X * Y.
+multiply(Pid, X, Y) when is_number(X), is_number(Y) -> X * Y;
+multiply(Pid, X, Y) when is_number(X) -> {fail, Y, is_not_number};
+multiply(Pid, X, Y) when is_number(Y) -> {fail, X, is_not_number};
+multiply(Pid, X, Y) -> {fail, X, is_not_number}.
 
-divide(Pid, X, Y) -> X / Y.
+
+divide(Pid, X, Y) when is_number(X), is_number(Y) -> 
+	if Y == 0 ->
+		0;
+	true -> X / Y
+	end;
+divide(Pid, X, Y) when is_number(X) -> {fail, Y, is_not_number};
+divide(Pid, X, Y) when is_number(Y) -> {fail, X, is_not_number};
+divide(Pid, X, Y) -> {fail, X, is_not_number}.
+
+
+
+
 
 -ifdef(EUNIT).
 %%
@@ -77,7 +96,7 @@ factorializer_test_() ->
 adder_test_() ->
 {setup,
 	fun()->%runs before any of the tests
-			Pid = spawn(?MODULE,adder,[]),	
+			Pid = spawn(?MODULE,add,[]),	
 			register(test_adder,Pid)
 		end,
 	%fun(_)->%runs after all of the tests
